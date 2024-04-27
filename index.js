@@ -41,8 +41,10 @@ async function run() {
         //     res.send(result);
         // })
 
-        
-
+        app.get('/allSpots', async(req, res) => {
+            const result = await touristSpotsCollection.find().limit(6).toArray();
+            res.send(result);
+        })
         app.post('/addSpot', async(req, res) => {
             const spot = req.body;
             // console.log(spot);

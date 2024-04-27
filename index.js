@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require('express')
 const app = express()
 const cors = require('cors');
@@ -41,18 +41,28 @@ async function run() {
         //     res.send(result);
         // })
 
-        app.get('/allSpots', async(req, res) => {
+        app.get('/allSpots', async (req, res) => {
             const result = await touristSpotsCollection.find().limit(6).toArray();
             res.send(result);
         })
-        app.post('/addSpot', async(req, res) => {
+        app.get('/allTouristSpots', async (req, res) => {
+            const result = await touristSpotsCollection.find().toArray();
+            res.send(result);
+        })
+        app.get('/spot/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id : new ObjectId(id)};
+            const result = await touristSpotsCollection.findOne(query);
+            res.send(result);
+        })
+        app.post('/addSpot', async (req, res) => {
             const spot = req.body;
             // console.log(spot);
             const result = await touristSpotsCollection.insertOne(spot);
             res.send(result);
         })
 
-        
+
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });

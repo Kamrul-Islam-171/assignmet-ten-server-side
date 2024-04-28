@@ -50,9 +50,13 @@ async function run() {
             const result = await touristSpotsCollection.find().toArray();
             res.send(result);
         })
+        app.get('/allSortedTouristSpots', async (req, res) => {
+            const result = await touristSpotsCollection.find().sort({avgCost:1}).toArray();
+            res.send(result);
+        })
         app.get('/spot/:id', async (req, res) => {
             const id = req.params.id;
-            const query = { _id : new ObjectId(id)};
+            const query = { _id: new ObjectId(id) };
             const result = await touristSpotsCollection.findOne(query);
             res.send(result);
         })
@@ -63,31 +67,53 @@ async function run() {
             res.send(result);
         })
 
-        app.get('/mySpots/:email', async(req, res) => {
-            const email =  req.params.email;
-            const query = {email : email};
+        app.get('/mySpots/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
             const result = await touristSpotsCollection.find(query).toArray();
             res.send(result);
         })
 
-        app.delete('/spot/:id', async(req, res) => {
+        app.delete('/spot/:id', async (req, res) => {
             const id = req.params.id;
-            const query = {_id : new ObjectId(id)};
+            const query = { _id: new ObjectId(id) };
             const result = await touristSpotsCollection.deleteOne(query);
+            res.send(result)
+        })
+        app.put('/update/:id', async (req, res) => {
+            const id = req.params.id;
+            const spotInfo = req.body;
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const UpdatedSpotInfo = {
+                $set: {
+
+                    photoUrl: spotInfo.photoUrl,
+                    spotName: spotInfo.spotName,
+                    country: spotInfo.country,
+                    location: spotInfo.location,
+                    description: spotInfo.description,
+                    avgCost: spotInfo.avgCost,
+                    season:spotInfo.season,
+                    travelTime:spotInfo.travelTime,
+                    totalVisitors:spotInfo.totalVisitors
+                }
+            }
+            const result = await touristSpotsCollection.updateOne(filter, UpdatedSpotInfo, options);
             res.send(result)
         })
 
 
         //countries
-        app.get('/countries', async(req, res) => {
+        app.get('/countries', async (req, res) => {
             const result = await allCountries.find().toArray();
             res.send(result);
         })
 
-        app.get('/countrySpots/:country', async(req, res) => {
+        app.get('/countrySpots/:country', async (req, res) => {
             const country = req.params.country;
             // console.log(country)
-            const query = {country : country};
+            const query = { country: country };
             const result = await touristSpotsCollection.find(query).toArray();
             res.send(result);
         })

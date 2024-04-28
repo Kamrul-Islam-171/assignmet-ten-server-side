@@ -33,6 +33,7 @@ async function run() {
 
 
         const touristSpotsCollection = client.db('TouristSpots').collection('spots');
+        const allCountries = client.db('TouristSpots').collection('Countries');
 
         // app.post('/theme', async(req, res) => {
         //     const data = {theme : "light"};
@@ -74,6 +75,21 @@ async function run() {
             const query = {_id : new ObjectId(id)};
             const result = await touristSpotsCollection.deleteOne(query);
             res.send(result)
+        })
+
+
+        //countries
+        app.get('/countries', async(req, res) => {
+            const result = await allCountries.find().toArray();
+            res.send(result);
+        })
+
+        app.get('/countrySpots/:country', async(req, res) => {
+            const country = req.params.country;
+            // console.log(country)
+            const query = {country : country};
+            const result = await touristSpotsCollection.find(query).toArray();
+            res.send(result);
         })
 
 

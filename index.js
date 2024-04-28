@@ -50,10 +50,12 @@ async function run() {
             const result = await touristSpotsCollection.find().toArray();
             res.send(result);
         })
+
         app.get('/allSortedTouristSpots', async (req, res) => {
             const result = await touristSpotsCollection.find().sort({avgCost:1}).toArray();
             res.send(result);
         })
+        
         app.get('/spot/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };

@@ -34,6 +34,7 @@ async function run() {
 
         const touristSpotsCollection = client.db('TouristSpots').collection('spots');
         const allCountries = client.db('TouristSpots').collection('Countries');
+        const feedBacks = client.db('TouristSpots').collection('FeedBacks');
 
         // app.post('/theme', async(req, res) => {
         //     const data = {theme : "light"};
@@ -120,6 +121,17 @@ async function run() {
             res.send(result);
         })
 
+
+        //feedbacks
+        app.get('/feedBacks', async(req, res) => {
+            const result = await feedBacks.find().toArray();
+            res.send(result);
+        })
+        app.post('/feedBacks', async(req, res) => {
+            const userReply = req.body;
+            const result = await feedBacks.insertOne(userReply);
+            res.send(result);
+        })
 
 
         // Send a ping to confirm a successful connection

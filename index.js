@@ -7,7 +7,9 @@ const port = process.env.PORT || 5000;
 
 
 //middleware
-app.use(cors());
+app.use(cors({
+    origin:['http://localhost:5173', 'https://assignment-ten-12823.web.app']
+}));
 app.use(express.json());
 
 
@@ -29,7 +31,7 @@ const client = new MongoClient(uri, {
 async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
-        await client.connect();
+        // await client.connect();
 
 
         const touristSpotsCollection = client.db('TouristSpots').collection('spots');
